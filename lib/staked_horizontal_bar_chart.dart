@@ -3,25 +3,31 @@ library staked_horizontal_bar_chart;
 import 'package:flutter/material.dart';
 
 class StakedHorizontalBarChart extends StatelessWidget {
-  final List<StakedHorizontalBarChartData> _data;
-  final double _gap;
-
   const StakedHorizontalBarChart({
     super.key,
     required List<StakedHorizontalBarChartData> data,
     double gap = .02,
-  })  : _gap = gap,
-        _data = data;
+    double height = 50,
+    double width = double.infinity,
+  }) : _gap = gap,
+       _data = data,
+       _height = height,
+       _width = width;
+
+  final List<StakedHorizontalBarChartData> _data;
+  final double _gap;
+  final double _height;
+  final double _width;
 
   List<Color> get _processedColors {
     return _data.fold(
         <Color>[],
         (List<Color> l, d) => [
-              ...l,
-              d._color,
-              d._color,
-              Colors.transparent,
-              Colors.transparent,
+          ...l,
+          d._color,
+          d._color,
+          Colors.transparent,
+          Colors.transparent,
             ])
       ..removeLast()
       ..removeLast();
@@ -31,12 +37,12 @@ class StakedHorizontalBarChart extends StatelessWidget {
     double totalGapsWith = _gap * (_data.length - 1);
     double totalData = _data.fold(0, (a, b) => a + b._units);
     return _data.fold(<double>[0.0], (List<double> l, d) {
-      l.add(l.last + d._units * (1 - totalGapsWith) / totalData);
-      l.add(l.last);
-      l.add(l.last + _gap);
-      l.add(l.last);
-      return l;
-    })
+        l.add(l.last + d._units * (1 - totalGapsWith) / totalData);
+        l.add(l.last);
+        l.add(l.last + _gap);
+        l.add(l.last);
+        return l;
+      })
       ..removeLast()
       ..removeLast()
       ..removeLast();
@@ -45,6 +51,8 @@ class StakedHorizontalBarChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: _height,
+      width: _width,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(
           Radius.circular(500),
@@ -65,6 +73,6 @@ class StakedHorizontalBarChartData {
   final Color _color;
 
   StakedHorizontalBarChartData({required double units, required Color color})
-      : _color = color,
-        _units = units;
+    : _color = color,
+      _units = units;
 }
